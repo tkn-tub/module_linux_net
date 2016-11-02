@@ -54,8 +54,8 @@ class NetworkModule(wishful_module.AgentModule):
             return retVal
         except Exception as e:
             self.log.fatal("Failed to get HW address for %s, err_msg:%s" % (iface, str(e)))
-            raise exceptions.UPIFunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
-                                                                 err_msg='Failed to get HW addr: ' + str(e))
+            raise exceptions.FunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
+                                                              err_msg='Failed to get HW addr: ' + str(e))
 
 
     @wishful_module.bind_function(upis.net.get_iface_ip_addr)
@@ -68,8 +68,8 @@ class NetworkModule(wishful_module.AgentModule):
             return ipList
         except Exception as e:
             self.log.fatal("Failed to get IP address for %s, err_msg:%s" % (iface, str(e)))
-            raise exceptions.UPIFunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
-                                                                 err_msg='Failed to get IP addr: ' + str(e))
+            raise exceptions.FunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
+                                                              err_msg='Failed to get IP addr: ' + str(e))
 
     @wishful_module.bind_function(upis.net.set_ARP_entry)
     def set_ARP_entry(self, iface, mac_addr, ip_addr):
@@ -82,8 +82,8 @@ class NetworkModule(wishful_module.AgentModule):
             return sout
         except Exception as e:
             self.log.fatal("Failed to set ARP entry for iface:%s, err_msg:%s" % str(e))
-            raise exceptions.UPIFunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
-                                                                 err_msg='Failed to set ARP entry: ' + str(e))
+            raise exceptions.FunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
+                                                              err_msg='Failed to set ARP entry: ' + str(e))
 
 
     @wishful_module.bind_function(upis.net.change_routing)
@@ -116,8 +116,8 @@ class NetworkModule(wishful_module.AgentModule):
 
         except Exception as e:
             self.log.fatal("Failed to change routing, err_msg:%s" % str(e))
-            raise exceptions.UPIFunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
-                                                                 err_msg='Failed to change routing: ' + str(e))
+            raise exceptions.FunctionExecutionFailedException(func_name=inspect.currentframe().f_code.co_name,
+                                                              err_msg='Failed to change routing: ' + str(e))
 
     @wishful_module.bind_function(upis.net.set_netem_profile)
     def set_netem_profile(self, iface, profile):
