@@ -1,9 +1,7 @@
-WiSHFUL Agent Module for Linux Networking
+UniFlex Agent Module for Linux Networking
 =========================================
 
-This is a prototypic implementation of a wireless agent providing the Unified
-Programming Interfaces (UPIs) of the Wishful software platform for
-radio and network control.
+Wrapper for Linux networking functions
 
 ## Acknowledgement
 
