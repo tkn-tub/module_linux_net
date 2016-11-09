@@ -1,6 +1,5 @@
 import logging
 import datetime
-import wishful_upis as upis
 from uniflex.core import modules
 
 __author__ = "Anatolij Zubow"
@@ -13,8 +12,7 @@ Local test of net linux component.
 '''
 
 
-@modules.build_module
-class NetLinuxController(modules.ControllerModule):
+class NetLinuxController(modules.ControlApplication):
     def __init__(self):
         super(NetLinuxController, self).__init__()
         self.log = logging.getLogger('NetLinuxController')
