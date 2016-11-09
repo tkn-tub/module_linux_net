@@ -18,8 +18,7 @@ __version__ = "0.1.0"
 __email__ = "{gawlowicz, zubow}@tkn.tu-berlin.de"
 
 
-@modules.build_module
-class NetworkModule(modules.AgentModule):
+class NetworkModule(modules.ProtocolModule):
     def __init__(self):
         super(NetworkModule, self).__init__()
         self.log = logging.getLogger('NetworkModule')
