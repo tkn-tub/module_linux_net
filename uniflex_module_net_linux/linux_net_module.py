@@ -5,8 +5,7 @@ import iptc
 from pytc.TrafficControl import TrafficControl
 from pyroute2 import IPDB
 
-import wishful_upis as upis
-from wishful_upis.net import SimpleTable
+#from wishful_upis.net import SimpleTable
 
 from uniflex.core import exceptions
 from uniflex.core import modules
@@ -23,7 +22,6 @@ class NetworkModule(modules.ProtocolModule):
         super(NetworkModule, self).__init__()
         self.log = logging.getLogger('NetworkModule')
 
-    @modules.bind_function(upis.net.get_ifaces)
     def get_ifaces(self):
         """Return the list of interface names
         """
@@ -31,7 +29,6 @@ class NetworkModule(modules.ProtocolModule):
         retVal = ni.interfaces()
         return retVal
 
-    @modules.bind_function(upis.net.get_iface_hw_addr)
     def get_iface_hw_addr(self, iface):
         """Return the MAC address of a particular interface
         """
@@ -40,12 +37,12 @@ class NetworkModule(modules.ProtocolModule):
             retVal = ni.ifaddresses(iface)[ni.AF_LINK][0]['addr']
             return retVal
         except Exception as e:
-            self.log.fatal("Failed to get HW address for %s, err_msg:%s" % (iface, str(e)))
+            self.log.fatal("Failed to get HW address for {}, err_msg: {}"
+                           .format(iface, str(e)))
             raise exceptions.FunctionExecutionFailedException(
                 func_name=inspect.currentframe().f_code.co_name,
                 err_msg='Failed to get HW addr: ' + str(e))
 
-    @modules.bind_function(upis.net.get_iface_ip_addr)
     def get_iface_ip_addr(self, iface):
         """Interfaces may have multiple addresses, return a list with all addresses
         """
@@ -59,7 +56,6 @@ class NetworkModule(modules.ProtocolModule):
                 func_name=inspect.currentframe().f_code.co_name,
                 err_msg='Failed to get IP addr: ' + str(e))
 
-    @modules.bind_function(upis.net.set_ARP_entry)
     def set_ARP_entry(self, iface, mac_addr, ip_addr):
         """
             Manipulates the local ARP cache.
@@ -74,7 +70,6 @@ class NetworkModule(modules.ProtocolModule):
                 func_name=inspect.currentframe().f_code.co_name,
                 err_msg='Failed to set ARP entry: ' + str(e))
 
-    @modules.bind_function(upis.net.change_routing)
     def change_routing(self, serving_gw_ip_addr, target_gw_ip_addr, dst_ip_addr):
         '''
             IPDB has a simple yet useful routing management interface.
@@ -108,7 +103,6 @@ class NetworkModule(modules.ProtocolModule):
                 func_name=inspect.currentframe().f_code.co_name,
                 err_msg='Failed to change routing: ' + str(e))
 
-    @modules.bind_function(upis.net.set_netem_profile)
     def set_netem_profile(self, iface, profile):
         self.log.debug('set_profile on interface: {}'.format(iface))
 
@@ -117,7 +111,6 @@ class NetworkModule(modules.ProtocolModule):
         intface.setProfile(profile)
         return True
 
-    @modules.bind_function(upis.net.update_netem_profile)
     def update_netem_profile(self, iface, profile):
         self.log.debug('updateProfile on interface: {}'.format(iface))
 
@@ -126,7 +119,6 @@ class NetworkModule(modules.ProtocolModule):
         intface.updateProfile(profile)
         return True
 
-    @modules.bind_function(upis.net.remove_netem_profile)
     def remove_netem_profile(self, iface):
         self.log.debug('removeProfile on interface: {}'.format(iface))
 
@@ -135,7 +127,6 @@ class NetworkModule(modules.ProtocolModule):
         intface.clean()
         return True
 
-    @modules.bind_function(upis.net.set_per_link_netem_profile)
     def set_per_link_netem_profile(self, iface, dstIpAddr, profile):
         self.log.debug('setPerLinkProfile on interface: {}'.format(iface))
 
@@ -144,7 +135,6 @@ class NetworkModule(modules.ProtocolModule):
         intface.setPerLinkProfile(profile, dstIpAddr)
         return True
 
-    @modules.bind_function(upis.net.remove_per_link_netem_profile)
     def remove_per_link_netem_profile(self, iface, dstIpAddr):
         self.log.debug('removePerLinkProfile on interface: {}'.format(iface))
 
@@ -153,7 +143,6 @@ class NetworkModule(modules.ProtocolModule):
         intface.cleanPerLinkProfile(dstIpAddr)
         return True
 
-    @modules.bind_function(upis.net.update_per_link_netem_profile)
     def update_per_link_netem_profile(self, iface, dstIpAddr, profile):
         self.log.debug('updatePerLinkProfile on interface: {}'.format(iface))
 
@@ -162,7 +151,6 @@ class NetworkModule(modules.ProtocolModule):
         intface.updatePerLinkProfile(profile, dstIpAddr)
         return True
 
-    @modules.bind_function(upis.net.install_egress_scheduler)
     def install_egress_scheduler(self, iface, scheduler):
         self.log.debug('installEgressScheduler on interface: {}'.format(iface))
 
@@ -171,7 +159,6 @@ class NetworkModule(modules.ProtocolModule):
         intface.setEgressScheduler(scheduler)
         return True
 
-    @modules.bind_function(upis.net.remove_egress_scheduler)
     def remove_egress_scheduler(self, iface):
         self.log.debug('removeEgressScheduler on interface: {}'.format(iface))
 
@@ -181,7 +168,6 @@ class NetworkModule(modules.ProtocolModule):
         tcMgr.cleanIpTables()
         return True
 
-    @modules.bind_function(upis.net.clear_nf_tables)
     def clear_nf_tables(self, table="ALL", chain="ALL"):
         self.log.debug('clearIpTables'.format())
 
@@ -212,7 +198,6 @@ class NetworkModule(modules.ProtocolModule):
 
         return True
 
-    @modules.bind_function(upis.net.get_nf_table)
     def get_nf_table(self, tableName):
         self.log.debug('getIpTable'.format())
 
@@ -221,10 +206,10 @@ class NetworkModule(modules.ProtocolModule):
         # refresh table to get current counters
         table.refresh()
         # create simple table (ie. without pointers to ctypes)
-        simpleTable = SimpleTable(table)
-        return simpleTable
+        # simpleTable = SimpleTable(table)
+        # return simpleTable
+        return None
 
-    @modules.bind_function(upis.net.set_pkt_marking)
     def set_pkt_marking(self, flowId, markId=None,
                         table="mangle", chain="POSTROUTING"):
         self.log.debug('setMarking'.format())
@@ -260,7 +245,6 @@ class NetworkModule(modules.ProtocolModule):
         chain.insert_rule(rule)
         return markId
 
-    @modules.bind_function(upis.net.del_pkt_marking)
     def del_pkt_marking(self, flowId, markId,
                         table="mangle", chain="POSTROUTING"):
         # TODO: store table and chain per flowId/mark in set_pkt_marking,
@@ -294,7 +278,6 @@ class NetworkModule(modules.ProtocolModule):
         chain.delete_rule(rule)
         return True
 
-    @modules.bind_function(upis.net.set_ip_tos)
     def set_ip_tos(self, flowId, tos, table="mangle", chain="POSTROUTING"):
         self.log.debug('setTos'.format())
 
@@ -325,7 +308,6 @@ class NetworkModule(modules.ProtocolModule):
         chain.insert_rule(rule)
         return True
 
-    @modules.bind_function(upis.net.del_ip_tos)
     def del_ip_tos(self, flowId, tos, table="mangle", chain="POSTROUTING"):
         # TODO: store table and chain per flowId/mark in set_pkt_marking,
         # it should be possible to remove marking only with flowId/markId
