@@ -1,7 +1,10 @@
 UniFlex Agent Module for Linux Networking
 =========================================
 
-Wrapper for Linux networking functions
+UniFlex Module for Linux networking functions
+
+## Installation:
+To install UniFlex framework with all available modules, please go through all steps in [manifest](https://github.com/uniflex/manifests) repository.
 
 ## Acknowledgement
 
