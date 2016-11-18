@@ -10,6 +10,12 @@ from pyroute2 import IPDB
 from uniflex.core import exceptions
 from uniflex.core import modules
 
+from sbi.protocols.arp import ArpProtocol
+from sbi.protocols.ip import IpProtocol
+from sbi.protocols.net_filter import NetFilter
+from sbi.protocols.qdisc import Qdisc
+from sbi.protocols.tcp import TcpProtocol
+
 
 __author__ = "Piotr Gawlowicz, Anatolij Zubow"
 __copyright__ = "Copyright (c) 2015, Technische Universität Berlin"
@@ -19,7 +25,7 @@ __email__ = "{gawlowicz, zubow}@tkn.tu-berlin.de"
 """
     Network module for Linux OS.
 """
-class NetworkModule(modules.ProtocolModule):
+class NetworkModule(modules.ProtocolModule, ArpProtocol, IpProtocol, NetFilter, Qdisc, TcpProtocol):
     def __init__(self):
         super(NetworkModule, self).__init__()
         self.log = logging.getLogger('NetworkModule')
