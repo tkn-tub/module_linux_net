@@ -16,7 +16,9 @@ __copyright__ = "Copyright (c) 2015, Technische Universität Berlin"
 __version__ = "0.1.0"
 __email__ = "{gawlowicz, zubow}@tkn.tu-berlin.de"
 
-
+"""
+    Network module for Linux OS.
+"""
 class NetworkModule(modules.ProtocolModule):
     def __init__(self):
         super(NetworkModule, self).__init__()
@@ -30,7 +32,7 @@ class NetworkModule(modules.ProtocolModule):
         return retVal
 
     def get_iface_hw_addr(self, iface):
-        """Return the MAC address of a particular interface
+        """Return the MAC address of a particular network interface
         """
         try:
             self.log.info('get_iface_hw_addr() called {}'.format(iface))
@@ -44,7 +46,7 @@ class NetworkModule(modules.ProtocolModule):
                 err_msg='Failed to get HW addr: ' + str(e))
 
     def get_iface_ip_addr(self, iface):
-        """Interfaces may have multiple addresses, return a list with all addresses
+        """Interfaces may have multiple IP addresses, return a list with all IP addresses
         """
         try:
             self.log.info('get_iface_ip_addr() called {}'.format(iface))
@@ -58,7 +60,7 @@ class NetworkModule(modules.ProtocolModule):
 
     def set_ARP_entry(self, iface, mac_addr, ip_addr):
         """
-            Manipulates the local ARP cache.
+            Adds an entry to the local ARP cache.
             TODO: use Netlink API
         """
         try:
@@ -72,6 +74,8 @@ class NetworkModule(modules.ProtocolModule):
 
     def change_routing(self, serving_gw_ip_addr, target_gw_ip_addr, dst_ip_addr):
         '''
+            Adds entry to routing table.
+
             IPDB has a simple yet useful routing management interface.
             To add a route, one can use almost any syntax::
             pass spec as is
@@ -104,6 +108,9 @@ class NetworkModule(modules.ProtocolModule):
                 err_msg='Failed to change routing: ' + str(e))
 
     def set_netem_profile(self, iface, profile):
+        """
+            Sets the network emulation parameters
+        """
         self.log.debug('set_profile on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -112,6 +119,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def update_netem_profile(self, iface, profile):
+        """
+            Updates the network emulation parameters
+        """
         self.log.debug('updateProfile on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -120,6 +130,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def remove_netem_profile(self, iface):
+        """
+            Removes the network emulation parameters
+        """
         self.log.debug('removeProfile on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -128,6 +141,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def set_per_link_netem_profile(self, iface, dstIpAddr, profile):
+        """
+            Sets per link network emulation parameters
+        """
         self.log.debug('setPerLinkProfile on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -136,6 +152,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def remove_per_link_netem_profile(self, iface, dstIpAddr):
+        """
+            Remove per link network emulation parameters
+        """
         self.log.debug('removePerLinkProfile on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -144,6 +163,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def update_per_link_netem_profile(self, iface, dstIpAddr, profile):
+        """
+            Update per link network emulation parameters
+        """
         self.log.debug('updatePerLinkProfile on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -152,6 +174,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def install_egress_scheduler(self, iface, scheduler):
+        """
+            Traffic control: install egress scheduler
+        """
         self.log.debug('installEgressScheduler on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -160,6 +185,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def remove_egress_scheduler(self, iface):
+        """
+            Traffic control: remove egress scheduler
+        """
         self.log.debug('removeEgressScheduler on interface: {}'.format(iface))
 
         tcMgr = TrafficControl()
@@ -169,6 +197,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def clear_nf_tables(self, table="ALL", chain="ALL"):
+        """
+            Clear IP tables
+        """
         self.log.debug('clearIpTables'.format())
 
         tables = []
@@ -199,6 +230,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def get_nf_table(self, tableName):
+        """
+            Get IP tables
+        """
         self.log.debug('getIpTable'.format())
 
         # exec embedded function
@@ -212,6 +246,9 @@ class NetworkModule(modules.ProtocolModule):
 
     def set_pkt_marking(self, flowId, markId=None,
                         table="mangle", chain="POSTROUTING"):
+        """
+            Mark packets
+        """
         self.log.debug('setMarking'.format())
 
         if not markId:
@@ -247,6 +284,9 @@ class NetworkModule(modules.ProtocolModule):
 
     def del_pkt_marking(self, flowId, markId,
                         table="mangle", chain="POSTROUTING"):
+        """
+            Unmark packets
+        """
         # TODO: store table and chain per flowId/mark in set_pkt_marking,
         # it should be possible to remove marking only with flowId/markId
         self.log.debug('delMarking'.format())
@@ -279,6 +319,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def set_ip_tos(self, flowId, tos, table="mangle", chain="POSTROUTING"):
+        """
+            Set IP ToS field
+        """
         self.log.debug('setTos'.format())
 
         rule = iptc.Rule()
@@ -309,6 +352,9 @@ class NetworkModule(modules.ProtocolModule):
         return True
 
     def del_ip_tos(self, flowId, tos, table="mangle", chain="POSTROUTING"):
+        """
+            Disable IP ToS mangling
+        """
         # TODO: store table and chain per flowId/mark in set_pkt_marking,
         # it should be possible to remove marking only with flowId/markId
         self.log.debug('delTos'.format())
